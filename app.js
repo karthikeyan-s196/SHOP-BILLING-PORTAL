@@ -1,0 +1,11 @@
+const store={get:(k,d)=>JSON.parse(localStorage.getItem(k)??JSON.stringify(d)),set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+const toast=(msg,type='success')=>{const t=document.createElement('div');t.className=`toast align-items-center text-bg-${type} border-0 show position-fixed bottom-0 end-0 m-3`;t.innerHTML=`<div class='d-flex'><div class='toast-body'>${msg}</div><button class='btn-close btn-close-white me-2 m-auto' onclick='this.closest(".toast").remove()'></button></div>`;document.body.append(t);setTimeout(()=>t.remove(),2500)};
+const auth={login:(u,p)=>u==='Senthilelectricals'&&p==='ADMIN',check:()=>store.get('session',false),logout:()=>{store.set('session',false);location='index.html'}};
+const protect=()=>{if(!auth.check()&&!location.pathname.endsWith('index.html')) location='index.html';};
+const darkInit=()=>{if(store.get('theme','light')==='dark')document.body.classList.add('dark');};
+const toggleTheme=()=>{document.body.classList.toggle('dark');store.set('theme',document.body.classList.contains('dark')?'dark':'light')};
+const productsAPI={all:()=>store.get('products',[]),save:(a)=>store.set('products',a)};
+const billsAPI={all:()=>store.get('bills',[]),save:(a)=>store.set('bills',a)};
+const settingsAPI={get:()=>store.get('settings',{taxEnabled:true}),set:(s)=>store.set('settings',s)};
+const animateCounter=(el,to)=>{let n=0,step=Math.max(1,Math.ceil(to/40));let i=setInterval(()=>{n+=step;if(n>=to){n=to;clearInterval(i)}el.textContent=n.toLocaleString()},20)};
+window.addEventListener('DOMContentLoaded',()=>{darkInit();protect();document.querySelectorAll('.theme-toggle').forEach(b=>b.onclick=toggleTheme)});
